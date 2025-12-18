@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details - Pickup Soccer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚽ Pickup Soccer Event</h1>
+            <a href="/" class="back-link">← Create New Event</a>
+        </header>
+        
+        <main>
+            <div id="loading" class="loading">Loading event details...</div>
+            
+            <div id="eventDetails" class="hidden">
+                <div class="event-card">
+                    <h2 id="eventTitle"></h2>
+                    
+                    <div class="event-info">
+                        <div class="info-item">
+                            <strong>📅 Date:</strong>
+                            <span id="eventDate"></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>🕐 Time:</strong>
+                            <span id="eventTime"></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>📍 Location:</strong>
+                            <span id="eventLocation"></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>👤 Organizer:</strong>
+                            <span id="eventOrganizer"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rsvp-section">
+                    <h3>RSVP</h3>
+                    <form id="rsvpForm">
+                        <div class="form-group">
+                            <label for="playerName">Your Name:</label>
+                            <input type="text" id="playerName" name="playerName" required 
+                                   placeholder="e.g., Sarah Johnson">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Will you attend?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="status" value="going" required>
+                                    <span class="radio-text">✓ I'm going</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="status" value="not_going" required>
+                                    <span class="radio-text">✗ Can't make it</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit RSVP</button>
+                    </form>
+                    
+                    <div id="rsvpMessage" class="message hidden"></div>
+                </div>
+                
+                <div class="rsvp-list">
+                    <h3>Responses (<span id="goingCount">0</span> going, <span id="notGoingCount">0</span> not going)</h3>
+                    
+                    <div class="rsvp-category">
+                        <h4>✓ Going</h4>
+                        <ul id="goingList" class="player-list"></ul>
+                    </div>
+                    
+                    <div class="rsvp-category">
+                        <h4>✗ Not Going</h4>
+                        <ul id="notGoingList" class="player-list"></ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="errorMessage" class="error hidden"></div>
+        </main>
+    </div>
+    
+    <script src="event.js"></script>
+</body>
+</html>
