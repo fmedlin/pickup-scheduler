@@ -34,17 +34,26 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
         document.getElementById('inviteLink').value = fullLink;
         
         // Setup copy button
-        document.getElementById('copyBtn').addEventListener('click', () => {
+        document.getElementById('copyBtn').addEventListener('click', async () => {
             const inviteLinkInput = document.getElementById('inviteLink');
-            inviteLinkInput.select();
-            document.execCommand('copy');
-            
             const btn = document.getElementById('copyBtn');
             const originalText = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
+            
+            try {
+                await navigator.clipboard.writeText(inviteLinkInput.value);
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                inviteLinkInput.select();
+                document.execCommand('copy');
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }
         });
         
     } catch (error) {
