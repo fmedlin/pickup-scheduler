@@ -79,6 +79,7 @@ function showAnnouncementForm() {
     noAnnouncementEl.classList.add('hidden');
     editBtn.classList.add('hidden');
     inputEl.focus();
+    updateCharCounter();
 }
 
 function hideAnnouncementForm() {
@@ -88,6 +89,24 @@ function hideAnnouncementForm() {
     formEl.classList.add('hidden');
     editBtn.classList.remove('hidden');
     displayAnnouncement(currentEvent);
+}
+
+function updateCharCounter() {
+    const inputEl = document.getElementById('announcementInput');
+    const counterEl = document.getElementById('charCounter');
+    const MAX_ANNOUNCEMENT_LENGTH = 500;
+    const currentLength = inputEl.value.length;
+    
+    counterEl.textContent = `${currentLength} / ${MAX_ANNOUNCEMENT_LENGTH} characters`;
+    
+    // Add warning class if approaching or exceeding limit
+    if (currentLength > MAX_ANNOUNCEMENT_LENGTH) {
+        counterEl.className = 'char-counter char-counter-over';
+    } else if (currentLength > MAX_ANNOUNCEMENT_LENGTH * 0.9) {
+        counterEl.className = 'char-counter char-counter-warning';
+    } else {
+        counterEl.className = 'char-counter';
+    }
 }
 
 async function saveAnnouncement() {
@@ -128,6 +147,7 @@ async function saveAnnouncement() {
 document.getElementById('editAnnouncementBtn').addEventListener('click', showAnnouncementForm);
 document.getElementById('cancelAnnouncementBtn').addEventListener('click', hideAnnouncementForm);
 document.getElementById('saveAnnouncementBtn').addEventListener('click', saveAnnouncement);
+document.getElementById('announcementInput').addEventListener('input', updateCharCounter);
 
 function displayRsvps(rsvps) {
     const goingList = document.getElementById('goingList');
