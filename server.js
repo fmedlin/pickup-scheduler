@@ -127,10 +127,13 @@ app.post('/api/events/:id/rsvp', (req, res) => {
     event.rsvps.push(rsvp);
   }
   
+  // Return event without the organizerToken
+  const { organizerToken, ...publicEvent } = event;
+  
   res.json({
     message: 'RSVP recorded successfully',
     rsvp,
-    event
+    event: publicEvent
   });
 });
 
