@@ -79,6 +79,7 @@ function showAnnouncementForm() {
     noAnnouncementEl.classList.add('hidden');
     editBtn.classList.add('hidden');
     inputEl.focus();
+    updateCharCounter('announcementInput', 'charCounter');
 }
 
 function hideAnnouncementForm() {
@@ -93,6 +94,12 @@ function hideAnnouncementForm() {
 async function saveAnnouncement() {
     const inputEl = document.getElementById('announcementInput');
     const announcement = inputEl.value.trim();
+    
+    // Validate maximum length
+    if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+        alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
+        return;
+    }
     
     try {
         const response = await fetch(`/api/events/${eventId}/announcement`, {
@@ -121,6 +128,9 @@ async function saveAnnouncement() {
 document.getElementById('editAnnouncementBtn').addEventListener('click', showAnnouncementForm);
 document.getElementById('cancelAnnouncementBtn').addEventListener('click', hideAnnouncementForm);
 document.getElementById('saveAnnouncementBtn').addEventListener('click', saveAnnouncement);
+document.getElementById('announcementInput').addEventListener('input', () => {
+    updateCharCounter('announcementInput', 'charCounter');
+});
 
 function displayRsvps(rsvps) {
     const goingList = document.getElementById('goingList');
