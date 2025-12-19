@@ -45,6 +45,13 @@
                            placeholder="e.g., John Smith">
                 </div>
                 
+                <div class="form-group">
+                    <label for="announcement">Announcement (optional):</label>
+                    <textarea id="announcement" name="announcement" rows="3"
+                              placeholder="e.g., Bring water bottles, field may be wet"></textarea>
+                    <div id="createCharCounter" class="char-counter">0 / 500 characters</div>
+                </div>
+                
                 <button type="submit" class="btn btn-primary">Create Event</button>
             </form>
             
@@ -60,6 +67,7 @@
         </main>
     </div>
     
+    <script src="constants.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,12 +1,21 @@
 document.getElementById('eventForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    const announcement = document.getElementById('announcement').value;
+    
+    // Validate announcement length
+    if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+        alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
+        return;
+    }
+    
     const formData = {
         title: document.getElementById('title').value,
         date: document.getElementById('date').value,
         time: document.getElementById('time').value,
         location: document.getElementById('location').value,
-        organizerName: document.getElementById('organizerName').value
+        organizerName: document.getElementById('organizerName').value,
+        announcement: announcement
     };
     
     try {
@@ -23,6 +32,11 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
         }
         
         const data = await response.json();
+        
+        // Store organizer token in localStorage for this event
+        if (data.organizerToken) {
+            localStorage.setItem(`organizer_${data.event.id}`, data.organizerToken);
+        }
         
         // Show the result section
         document.getElementById('eventForm').style.display = 'none';
@@ -59,4 +73,9 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     } catch (error) {
         alert('Error creating event: ' + error.message);
     }
+});
+
+// Character counter for announcement field
+document.getElementById('announcement').addEventListener('input', () => {
+    updateCharCounter('announcement', 'createCharCounter');
 });
