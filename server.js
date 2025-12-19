@@ -19,6 +19,8 @@ app.use(express.static('public'));
 app.post('/api/events', (req, res) => {
   const { title, date, time, location, organizerName, announcement } = req.body;
   
+  // Required fields: title, date, time, location, organizerName.
+  // `announcement` is optional and will default to an empty string if not provided.
   if (!title || !date || !time || !location || !organizerName) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
