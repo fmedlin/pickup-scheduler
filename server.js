@@ -46,6 +46,7 @@ app.post('/api/events', (req, res) => {
   }
   
   const eventId = uuidv4();
+  const organizerToken = uuidv4(); // Generate unique token for organizer
   const event = {
     id: eventId,
     title,
@@ -53,6 +54,7 @@ app.post('/api/events', (req, res) => {
     time,
     location,
     organizerName,
+    organizerToken, // Store token for authorization
     announcement: announcement || '',
     createdAt: new Date().toISOString(),
     rsvps: []
@@ -60,8 +62,12 @@ app.post('/api/events', (req, res) => {
   
   events.set(eventId, event);
   
+  // Return event without the organizerToken (except in response to creator)
+  const { organizerToken: token, ...publicEvent } = event;
+  
   res.status(201).json({
-    event,
+    event: publicEvent,
+    organizerToken: token, // Send token only to creator
     inviteLink: `/event.html?id=${eventId}`
   });
 });
@@ -75,13 +81,15 @@ app.get('/api/events/:id', (req, res) => {
     return res.status(404).json({ error: 'Event not found' });
   }
   
-  res.json(event);
+  // Don't expose the organizerToken to public
+  const { organizerToken, ...publicEvent } = event;
+  res.json(publicEvent);
 });
 
 // Update event announcement
 app.put('/api/events/:id/announcement', (req, res) => {
   const eventId = req.params.id;
-  const { announcement } = req.body;
+  const { announcement, organizerToken } = req.body;
   
   const event = events.get(eventId);
   
@@ -89,6 +97,10 @@ app.put('/api/events/:id/announcement', (req, res) => {
     return res.status(404).json({ error: 'Event not found' });
   }
   
+  // Verify organizer token
+  if (!organizerToken || organizerToken !== event.organizerToken) {
+    return res.status(403).json({ error: 'Unauthorized: Only the organizer can edit announcements' });
+    
   // Validate announcement length
   const validation = validateAnnouncementLength(announcement);
   if (!validation.valid) {
@@ -97,9 +109,12 @@ app.put('/api/events/:id/announcement', (req, res) => {
   
   event.announcement = announcement || '';
   
+  // Return event without the organizerToken
+  const { organizerToken: token, ...publicEvent } = event;
+  
   res.json({
     message: 'Announcement updated successfully',
-    event
+    event: publicEvent
   });
 });
 
@@ -137,10 +152,13 @@ app.post('/api/events/:id/rsvp', (req, res) => {
     event.rsvps.push(rsvp);
   }
   
+  // Return event without the organizerToken
+  const { organizerToken, ...publicEvent } = event;
+  
   res.json({
     message: 'RSVP recorded successfully',
     rsvp,
-    event
+    event: publicEvent
   });
 });
 

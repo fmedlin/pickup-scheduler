@@ -53,8 +53,13 @@ function displayAnnouncement(event) {
     
     section.classList.remove('hidden');
     
-    // Show edit button for everyone (simple approach - no auth)
-    editBtn.classList.remove('hidden');
+    // Only show edit button if user has organizer token
+    const organizerToken = localStorage.getItem(`organizer_${eventId}`);
+    if (organizerToken) {
+        editBtn.classList.remove('hidden');
+    } else {
+        editBtn.classList.add('hidden');
+    }
     
     if (event.announcement && event.announcement.trim()) {
         textEl.textContent = event.announcement;
@@ -95,7 +100,13 @@ async function saveAnnouncement() {
     const inputEl = document.getElementById('announcementInput');
     const announcement = inputEl.value.trim();
     
-    // Validate maximum length
+    // Get organizer token from localStorage
+    const organizerToken = localStorage.getItem(`organizer_${eventId}`);
+    
+    if (!organizerToken) {
+        alert('Error: You do not have permission to edit announcements');
+
+      // Validate maximum length
     if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
         alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
         return;
@@ -107,11 +118,12 @@ async function saveAnnouncement() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ announcement })
+            body: JSON.stringify({ announcement, organizerToken })
         });
         
         if (!response.ok) {
-            throw new Error('Failed to update announcement');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to update announcement');
         }
         
         const data = await response.json();
