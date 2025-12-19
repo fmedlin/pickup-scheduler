@@ -33,14 +33,30 @@
                             <strong>📍 Location:</strong>
                             <span id="eventLocation"></span>
                         </div>
-                        <div class="info-item">
-                            <strong>👤 Organizer:</strong>
-                            <span id="eventOrganizer"></span>
-                        </div>
+                    <div class="info-item">
+                        <strong>👤 Organizer:</strong>
+                        <span id="eventOrganizer"></span>
                     </div>
                 </div>
-                
-                <div class="rsvp-section">
+            </div>
+            
+            <div id="announcementSection" class="announcement-section hidden">
+                <div class="announcement-header">
+                    <h3>📢 Announcement</h3>
+                    <button id="editAnnouncementBtn" class="btn btn-small hidden">Edit</button>
+                </div>
+                <p id="announcementText" class="announcement-text"></p>
+                <div id="announcementForm" class="hidden">
+                    <textarea id="announcementInput" rows="3" placeholder="Post an announcement for the group..."></textarea>
+                    <div class="announcement-actions">
+                        <button id="saveAnnouncementBtn" class="btn btn-primary btn-small">Save</button>
+                        <button id="cancelAnnouncementBtn" class="btn btn-secondary btn-small">Cancel</button>
+                    </div>
+                </div>
+                <p id="noAnnouncement" class="no-announcement hidden">No announcements yet.</p>
+            </div>
+            
+            <div class="rsvp-section">
                     <h3>RSVP</h3>
                     <form id="rsvpForm">
                         <div class="form-group">

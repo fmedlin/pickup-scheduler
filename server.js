@@ -17,7 +17,7 @@ app.use(express.static('public'));
 
 // Create a new event
 app.post('/api/events', (req, res) => {
-  const { title, date, time, location, organizerName } = req.body;
+  const { title, date, time, location, organizerName, announcement } = req.body;
   
   if (!title || !date || !time || !location || !organizerName) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -31,6 +31,7 @@ app.post('/api/events', (req, res) => {
     time,
     location,
     organizerName,
+    announcement: announcement || '',
     createdAt: new Date().toISOString(),
     rsvps: []
   };
@@ -53,6 +54,25 @@ app.get('/api/events/:id', (req, res) => {
   }
   
   res.json(event);
+});
+
+// Update event announcement
+app.put('/api/events/:id/announcement', (req, res) => {
+  const eventId = req.params.id;
+  const { announcement } = req.body;
+  
+  const event = events.get(eventId);
+  
+  if (!event) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
+  
+  event.announcement = announcement || '';
+  
+  res.json({
+    message: 'Announcement updated successfully',
+    event
+  });
 });
 
 // RSVP to an event

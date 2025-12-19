@@ -2,6 +2,8 @@
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('id');
 
+let currentEvent = null;
+
 if (!eventId) {
     showError('No event ID provided');
 } else {
@@ -17,6 +19,7 @@ async function loadEvent() {
         }
         
         const event = await response.json();
+        currentEvent = event;
         displayEvent(event);
         
     } catch (error) {
@@ -35,9 +38,89 @@ function displayEvent(event) {
     document.getElementById('eventLocation').textContent = event.location;
     document.getElementById('eventOrganizer').textContent = event.organizerName;
     
+    // Display announcement
+    displayAnnouncement(event);
+    
     // Display RSVPs
     displayRsvps(event.rsvps);
 }
+
+function displayAnnouncement(event) {
+    const section = document.getElementById('announcementSection');
+    const textEl = document.getElementById('announcementText');
+    const noAnnouncementEl = document.getElementById('noAnnouncement');
+    const editBtn = document.getElementById('editAnnouncementBtn');
+    
+    section.classList.remove('hidden');
+    
+    // Show edit button for everyone (simple approach - no auth)
+    editBtn.classList.remove('hidden');
+    
+    if (event.announcement && event.announcement.trim()) {
+        textEl.textContent = event.announcement;
+        textEl.classList.remove('hidden');
+        noAnnouncementEl.classList.add('hidden');
+    } else {
+        textEl.classList.add('hidden');
+        noAnnouncementEl.classList.remove('hidden');
+    }
+}
+
+function showAnnouncementForm() {
+    const formEl = document.getElementById('announcementForm');
+    const inputEl = document.getElementById('announcementInput');
+    const textEl = document.getElementById('announcementText');
+    const noAnnouncementEl = document.getElementById('noAnnouncement');
+    const editBtn = document.getElementById('editAnnouncementBtn');
+    
+    inputEl.value = currentEvent.announcement || '';
+    formEl.classList.remove('hidden');
+    textEl.classList.add('hidden');
+    noAnnouncementEl.classList.add('hidden');
+    editBtn.classList.add('hidden');
+    inputEl.focus();
+}
+
+function hideAnnouncementForm() {
+    const formEl = document.getElementById('announcementForm');
+    const editBtn = document.getElementById('editAnnouncementBtn');
+    
+    formEl.classList.add('hidden');
+    editBtn.classList.remove('hidden');
+    displayAnnouncement(currentEvent);
+}
+
+async function saveAnnouncement() {
+    const inputEl = document.getElementById('announcementInput');
+    const announcement = inputEl.value.trim();
+    
+    try {
+        const response = await fetch(`/api/events/${eventId}/announcement`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ announcement })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to update announcement');
+        }
+        
+        const data = await response.json();
+        currentEvent = data.event;
+        hideAnnouncementForm();
+        displayAnnouncement(currentEvent);
+        
+    } catch (error) {
+        alert('Error saving announcement: ' + error.message);
+    }
+}
+
+// Announcement event listeners
+document.getElementById('editAnnouncementBtn').addEventListener('click', showAnnouncementForm);
+document.getElementById('cancelAnnouncementBtn').addEventListener('click', hideAnnouncementForm);
+document.getElementById('saveAnnouncementBtn').addEventListener('click', saveAnnouncement);
 
 function displayRsvps(rsvps) {
     const goingList = document.getElementById('goingList');

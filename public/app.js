@@ -6,7 +6,8 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
         date: document.getElementById('date').value,
         time: document.getElementById('time').value,
         location: document.getElementById('location').value,
-        organizerName: document.getElementById('organizerName').value
+        organizerName: document.getElementById('organizerName').value,
+        announcement: document.getElementById('announcement').value
     };
     
     try {

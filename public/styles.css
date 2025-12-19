@@ -79,9 +79,21 @@ form h2 {
     transition: border-color 0.3s;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus {
     outline: none;
     border-color: #667eea;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.3s;
 }
 
 .radio-group {
@@ -201,6 +213,63 @@ form h2 {
 .event-card h2 {
     color: #333;
     margin-bottom: 20px;
+}
+
+.announcement-section {
+    background: #fffbeb;
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.announcement-header h3 {
+    color: #92400e;
+    margin: 0;
+}
+
+.announcement-text {
+    color: #78350f;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.no-announcement {
+    color: #a16207;
+    font-style: italic;
+}
+
+#announcementInput {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 12px;
+}
+
+#announcementInput:focus {
+    outline: none;
+    border-color: #d97706;
+}
+
+.announcement-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
 }
 
 .event-info {
