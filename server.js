@@ -25,6 +25,14 @@ app.post('/api/events', (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
   
+  // Validate announcement length
+  const MAX_ANNOUNCEMENT_LENGTH = 500;
+  if (announcement && announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+    return res.status(400).json({ 
+      error: `Announcement exceeds maximum length of ${MAX_ANNOUNCEMENT_LENGTH} characters` 
+    });
+  }
+  
   const eventId = uuidv4();
   const event = {
     id: eventId,
@@ -67,6 +75,14 @@ app.put('/api/events/:id/announcement', (req, res) => {
   
   if (!event) {
     return res.status(404).json({ error: 'Event not found' });
+  }
+  
+  // Validate announcement length
+  const MAX_ANNOUNCEMENT_LENGTH = 500;
+  if (announcement && announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+    return res.status(400).json({ 
+      error: `Announcement exceeds maximum length of ${MAX_ANNOUNCEMENT_LENGTH} characters` 
+    });
   }
   
   event.announcement = announcement || '';

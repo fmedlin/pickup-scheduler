@@ -94,6 +94,13 @@ async function saveAnnouncement() {
     const inputEl = document.getElementById('announcementInput');
     const announcement = inputEl.value.trim();
     
+    // Validate maximum length
+    const MAX_ANNOUNCEMENT_LENGTH = 500;
+    if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+        alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
+        return;
+    }
+    
     try {
         const response = await fetch(`/api/events/${eventId}/announcement`, {
             method: 'PUT',
