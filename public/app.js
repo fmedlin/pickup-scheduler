@@ -4,7 +4,6 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     const announcement = document.getElementById('announcement').value;
     
     // Validate announcement length
-    const MAX_ANNOUNCEMENT_LENGTH = 500;
     if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
         alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
         return;
@@ -72,22 +71,6 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
 });
 
 // Character counter for announcement field
-function updateCreateCharCounter() {
-    const inputEl = document.getElementById('announcement');
-    const counterEl = document.getElementById('createCharCounter');
-    const MAX_ANNOUNCEMENT_LENGTH = 500;
-    const currentLength = inputEl.value.length;
-    
-    counterEl.textContent = `${currentLength} / ${MAX_ANNOUNCEMENT_LENGTH} characters`;
-    
-    // Add warning class if approaching or exceeding limit
-    if (currentLength > MAX_ANNOUNCEMENT_LENGTH) {
-        counterEl.className = 'char-counter char-counter-over';
-    } else if (currentLength > MAX_ANNOUNCEMENT_LENGTH * 0.9) {
-        counterEl.className = 'char-counter char-counter-warning';
-    } else {
-        counterEl.className = 'char-counter';
-    }
-}
-
-document.getElementById('announcement').addEventListener('input', updateCreateCharCounter);
+document.getElementById('announcement').addEventListener('input', () => {
+    updateCharCounter('announcement', 'createCharCounter');
+});

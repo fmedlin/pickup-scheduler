@@ -79,7 +79,7 @@ function showAnnouncementForm() {
     noAnnouncementEl.classList.add('hidden');
     editBtn.classList.add('hidden');
     inputEl.focus();
-    updateCharCounter();
+    updateCharCounter('announcementInput', 'charCounter');
 }
 
 function hideAnnouncementForm() {
@@ -91,30 +91,11 @@ function hideAnnouncementForm() {
     displayAnnouncement(currentEvent);
 }
 
-function updateCharCounter() {
-    const inputEl = document.getElementById('announcementInput');
-    const counterEl = document.getElementById('charCounter');
-    const MAX_ANNOUNCEMENT_LENGTH = 500;
-    const currentLength = inputEl.value.length;
-    
-    counterEl.textContent = `${currentLength} / ${MAX_ANNOUNCEMENT_LENGTH} characters`;
-    
-    // Add warning class if approaching or exceeding limit
-    if (currentLength > MAX_ANNOUNCEMENT_LENGTH) {
-        counterEl.className = 'char-counter char-counter-over';
-    } else if (currentLength > MAX_ANNOUNCEMENT_LENGTH * 0.9) {
-        counterEl.className = 'char-counter char-counter-warning';
-    } else {
-        counterEl.className = 'char-counter';
-    }
-}
-
 async function saveAnnouncement() {
     const inputEl = document.getElementById('announcementInput');
     const announcement = inputEl.value.trim();
     
     // Validate maximum length
-    const MAX_ANNOUNCEMENT_LENGTH = 500;
     if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
         alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
         return;
@@ -147,7 +128,9 @@ async function saveAnnouncement() {
 document.getElementById('editAnnouncementBtn').addEventListener('click', showAnnouncementForm);
 document.getElementById('cancelAnnouncementBtn').addEventListener('click', hideAnnouncementForm);
 document.getElementById('saveAnnouncementBtn').addEventListener('click', saveAnnouncement);
-document.getElementById('announcementInput').addEventListener('input', updateCharCounter);
+document.getElementById('announcementInput').addEventListener('input', () => {
+    updateCharCounter('announcementInput', 'charCounter');
+});
 
 function displayRsvps(rsvps) {
     const goingList = document.getElementById('goingList');

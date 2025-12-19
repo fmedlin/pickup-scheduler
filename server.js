@@ -5,8 +5,22 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Constants
+const MAX_ANNOUNCEMENT_LENGTH = 500;
+
 // In-memory data storage
 const events = new Map();
+
+// Helper function to validate announcement length
+function validateAnnouncementLength(announcement) {
+  if (announcement && announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+    return {
+      valid: false,
+      error: `Announcement exceeds maximum length of ${MAX_ANNOUNCEMENT_LENGTH} characters`
+    };
+  }
+  return { valid: true };
+}
 
 // Middleware
 app.use(express.json());
@@ -26,11 +40,9 @@ app.post('/api/events', (req, res) => {
   }
   
   // Validate announcement length
-  const MAX_ANNOUNCEMENT_LENGTH = 500;
-  if (announcement && announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
-    return res.status(400).json({ 
-      error: `Announcement exceeds maximum length of ${MAX_ANNOUNCEMENT_LENGTH} characters` 
-    });
+  const validation = validateAnnouncementLength(announcement);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
   }
   
   const eventId = uuidv4();
@@ -78,11 +90,9 @@ app.put('/api/events/:id/announcement', (req, res) => {
   }
   
   // Validate announcement length
-  const MAX_ANNOUNCEMENT_LENGTH = 500;
-  if (announcement && announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
-    return res.status(400).json({ 
-      error: `Announcement exceeds maximum length of ${MAX_ANNOUNCEMENT_LENGTH} characters` 
-    });
+  const validation = validateAnnouncementLength(announcement);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
   }
   
   event.announcement = announcement || '';
