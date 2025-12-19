@@ -25,6 +25,11 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
         
         const data = await response.json();
         
+        // Store organizer token in localStorage for this event
+        if (data.organizerToken) {
+            localStorage.setItem(`organizer_${data.event.id}`, data.organizerToken);
+        }
+        
         // Show the result section
         document.getElementById('eventForm').style.display = 'none';
         const resultDiv = document.getElementById('result');
