@@ -267,6 +267,24 @@ form h2 {
     gap: 10px;
 }
 
+.char-counter {
+    font-size: 0.85rem;
+    color: #666;
+    text-align: right;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+.char-counter-warning {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.char-counter-over {
+    color: #dc2626;
+    font-weight: 600;
+}
+
 .btn-small {
     padding: 8px 16px;
     font-size: 0.9rem;

@@ -5,8 +5,22 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Constants
+const MAX_ANNOUNCEMENT_LENGTH = 500;
+
 // In-memory data storage
 const events = new Map();
+
+// Helper function to validate announcement length
+function validateAnnouncementLength(announcement) {
+  if (announcement && announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+    return {
+      valid: false,
+      error: `Announcement exceeds maximum length of ${MAX_ANNOUNCEMENT_LENGTH} characters`
+    };
+  }
+  return { valid: true };
+}
 
 // Middleware
 app.use(express.json());
@@ -23,6 +37,12 @@ app.post('/api/events', (req, res) => {
   // `announcement` is optional and will default to an empty string if not provided.
   if (!title || !date || !time || !location || !organizerName) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+  
+  // Validate announcement length
+  const validation = validateAnnouncementLength(announcement);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
   }
   
   const eventId = uuidv4();
@@ -80,6 +100,11 @@ app.put('/api/events/:id/announcement', (req, res) => {
   // Verify organizer token
   if (!organizerToken || organizerToken !== event.organizerToken) {
     return res.status(403).json({ error: 'Unauthorized: Only the organizer can edit announcements' });
+    
+  // Validate announcement length
+  const validation = validateAnnouncementLength(announcement);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
   }
   
   event.announcement = announcement || '';

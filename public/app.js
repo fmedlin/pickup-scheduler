@@ -1,13 +1,21 @@
 document.getElementById('eventForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    const announcement = document.getElementById('announcement').value;
+    
+    // Validate announcement length
+    if (announcement.length > MAX_ANNOUNCEMENT_LENGTH) {
+        alert(`Announcement is too long. Maximum length is ${MAX_ANNOUNCEMENT_LENGTH} characters. Current length: ${announcement.length}`);
+        return;
+    }
+    
     const formData = {
         title: document.getElementById('title').value,
         date: document.getElementById('date').value,
         time: document.getElementById('time').value,
         location: document.getElementById('location').value,
         organizerName: document.getElementById('organizerName').value,
-        announcement: document.getElementById('announcement').value
+        announcement: announcement
     };
     
     try {
@@ -65,4 +73,9 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     } catch (error) {
         alert('Error creating event: ' + error.message);
     }
+});
+
+// Character counter for announcement field
+document.getElementById('announcement').addEventListener('input', () => {
+    updateCharCounter('announcement', 'createCharCounter');
 });
